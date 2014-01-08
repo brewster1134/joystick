@@ -17,8 +17,9 @@ https://github.com/brewster1134/joystick
 
     init: ->
       @listeners =
-        up: []
+        down: []
         move: []
+        up: []
       @isDown = false
       @centerX = null
       @centerY = null
@@ -30,6 +31,7 @@ https://github.com/brewster1134/joystick
             deltaX: @deltaX
             deltaY: @deltaY
       @upEvent = new CustomEvent 'joystick.up'
+      @downEvent = new CustomEvent 'joystick.down'
 
       @bindEvents()
 
@@ -51,6 +53,8 @@ https://github.com/brewster1134/joystick
       @centerX = e.clientX
       @centerY = e.clientY
       @isDown = true
+      for listener in @listeners.down
+        listener.dispatchEvent @downEvent
 
     onEventUp: =>
       @isDown = false
@@ -66,6 +70,10 @@ https://github.com/brewster1134/joystick
 
     # PUBLIC METHODS
     #
+    onDown: (el, callback) ->
+      el.addEventListener 'joystick.down', callback
+      @listeners.down.push el
+
     onMove: (el, callback) ->
       el.addEventListener 'joystick.move', callback
       @listeners.move.push el

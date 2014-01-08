@@ -24,7 +24,7 @@ joystick.onUp document.getElementById('foo'), ->
 ## Development
 
 ### Dependencies
-* Ruby 2.0.0
+* Ruby
 * Bundler Gem
 * Node.js
 * npm
