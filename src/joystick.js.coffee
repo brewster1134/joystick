@@ -6,7 +6,23 @@ https://github.com/brewster1134/joystick
 ###
 
 ((window, document) ->
+  # Polyfill for console.log
   window.console ||= { log: -> }
+
+  # Polyfill for CustomEvent
+  # https://github.com/d4tocchini/customevent-polyfill
+  CustomEvent = (event, params) ->
+    params = params ||
+      bubbles: false
+      cancelable: false
+      detail: `undefined`
+
+    evt = document.createEvent 'CustomEvent'
+    evt.initCustomEvent event, params.bubbles, params.cancelable, params.detail
+    evt
+  CustomEvent:: = window.Event::
+  window.CustomEvent = CustomEvent
+
   window.Joystick = class Joystick
     constructor: (options) ->
       @el = document.getElementById options.id
