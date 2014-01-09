@@ -1,7 +1,7 @@
 ###
 joystick
 https://github.com/brewster1134/joystick
-@version 0.0.1
+@version 0.0.2
 @author Ryan Brewster
 ###
 
@@ -21,17 +21,18 @@ https://github.com/brewster1134/joystick
         move: []
         up: []
       @isDown = false
-      @centerX = null
-      @centerY = null
-      @deltaX = null
-      @deltaY = null
-      @moveEvent = ->
-        new CustomEvent 'joystick.move',
-          detail:
-            deltaX: @deltaX
-            deltaY: @deltaY
-      @upEvent = new CustomEvent 'joystick.up'
-      @downEvent = new CustomEvent 'joystick.down'
+      @centerX = 0
+      @centerY = 0
+      @deltaX = 0
+      @deltaY = 0
+      @details = ->
+        detail:
+          deltaX: @deltaX
+          deltaY: @deltaY
+
+      @moveEvent = -> new CustomEvent 'joystick.move', @details()
+      @upEvent = -> new CustomEvent 'joystick.up', @details()
+      @downEvent = -> new CustomEvent 'joystick.down', @details()
 
       @bindEvents()
 
@@ -54,12 +55,7 @@ https://github.com/brewster1134/joystick
       @centerY = e.clientY
       @isDown = true
       for listener in @listeners.down
-        listener.dispatchEvent @downEvent
-
-    onEventUp: =>
-      @isDown = false
-      for listener in @listeners.up
-        listener.dispatchEvent @upEvent
+        listener.dispatchEvent @downEvent()
 
     onEventMove: (e) =>
       if @isDown
@@ -67,6 +63,11 @@ https://github.com/brewster1134/joystick
         @deltaY = e.clientY - @centerY
         for listener in @listeners.move
           listener.dispatchEvent @moveEvent()
+
+    onEventUp: (e) =>
+      @isDown = false
+      for listener in @listeners.up
+        listener.dispatchEvent @upEvent()
 
     # PUBLIC METHODS
     #
