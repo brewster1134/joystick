@@ -1,16 +1,18 @@
 ###
 joystick
 https://github.com/brewster1134/joystick
-@version 0.0.2
+@version 0.0.3
 @author Ryan Brewster
 ###
 
 ((window, document) ->
   # Polyfill for console.log
+  #
   window.console ||= { log: -> }
 
   # Polyfill for CustomEvent
   # https://github.com/d4tocchini/customevent-polyfill
+  #
   CustomEvent = (event, params) ->
     params = params ||
       bubbles: false
@@ -67,20 +69,23 @@ https://github.com/brewster1134/joystick
     # use double rockets for event listenere methods to enforce correct context
     #
     onEventDown: (e) =>
-      @centerX = e.clientX
-      @centerY = e.clientY
+      e.preventDefault()
+      @centerX = e.clientX || e.touches[0].clientX
+      @centerY = e.clientY || e.touches[0].clientY
       @isDown = true
       for listener in @listeners.down
         listener.dispatchEvent @downEvent()
 
     onEventMove: (e) =>
+      e.preventDefault()
       if @isDown
-        @deltaX = e.clientX - @centerX
-        @deltaY = e.clientY - @centerY
+        @deltaX = (e.clientX || e.touches[0].clientX) - @centerX
+        @deltaY = (e.clientY || e.touches[0].clientY) - @centerY
         for listener in @listeners.move
           listener.dispatchEvent @moveEvent()
 
     onEventUp: (e) =>
+      e.preventDefault()
       @isDown = false
       for listener in @listeners.up
         listener.dispatchEvent @upEvent()
