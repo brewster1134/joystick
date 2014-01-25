@@ -47,7 +47,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (>= 1.2.0)
+  bundler
   growl
   guard
   guard-coffeescript

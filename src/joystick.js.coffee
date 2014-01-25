@@ -87,6 +87,8 @@ https://github.com/brewster1134/joystick
     onEventUp: (e) =>
       e.preventDefault()
       @isDown = false
+      @deltaX = 0
+      @deltaY = 0
       for listener in @listeners.up
         listener.dispatchEvent @upEvent()
 
